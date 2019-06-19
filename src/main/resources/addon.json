@@ -1,0 +1,10 @@
+{
+  "uuid": "%uuid%",
+  "name": "\u00a7c\u00a7lHorstBlocks Helper",
+  "mainClass": "eu.hywse.horstblocks.hbhelper.HelperAddon",
+  "description": "Einige nuetzliche Methoden!",
+  "version": 1,
+  "author": "hyWse (Daaniel)",
+  "category": 1,
+  "icon": "https://cdn.discordapp.com/attachments/335395867643346964/570697150573314048/128.png"
+}
