@@ -63,7 +63,7 @@ public class UserChatDesigner extends Panel {
         btnClearChat.setBounds(1195, 65, 100, 25);
         btnUploadHastebin.setBounds(1195, 100, 100, 25);
         btnSend.setBounds(1080, 680, 100, 45);
-        btnDeleteChat.setBounds(1195, 680, 120, 25);
+        btnDeleteChat.setBounds(1195, 680, 100, 25);
 
         txtChat.setBounds(25, 30, 1157, 635);
         txtMsg.setBounds(25, 680, 1040, 50);

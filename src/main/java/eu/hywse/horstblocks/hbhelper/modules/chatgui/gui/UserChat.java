@@ -39,6 +39,19 @@ public class UserChat extends UserChatDesigner {
         }
         tabbedPane.addTab(getUsername(), this);
 
+        JPanel pnlTab = new JPanel(new GridBagLayout());
+        pnlTab.setOpaque(true);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        pnlTab.add(new JLabel(tabbedPane.getTitleAt(getTabIndex())), gbc);
+        gbc.gridx++;
+        gbc.weightx = 0;
+        pnlTab.add(new JButton("\uD83D\uDD12"), gbc);
+        tabbedPane.setTabComponentAt(getTabIndex(), pnlTab);
+
         // Async icon load
         HelperAddon.getService().execute(() -> {
             int index = getTabIndex();

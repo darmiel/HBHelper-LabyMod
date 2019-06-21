@@ -11,6 +11,7 @@ import net.labymod.settings.elements.HeaderElement;
 import net.labymod.settings.elements.SettingsElement;
 import net.labymod.utils.ModColor;
 
+import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -45,6 +46,11 @@ public class HelperAddon extends LabyModAddon {
     public void onEnable() {
         getApi().getEventManager().register(new PrivateChatListener());
 
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println("ERR: " + e.getMessage());
+        }
         modules.add(this.chatGuiModule = new ChatGuiModule());
 
         // Tabs
@@ -64,8 +70,6 @@ public class HelperAddon extends LabyModAddon {
         for (Module module : modules) {
             System.out.println("Loading module: " + module.moduleName());
             list.add(new HeaderElement(ModColor.createColors("&8» &7Module: &c" + module.moduleName())));
-            System.out.println("   » Settings");
-            module.moduleSettings(list);
         }
     }
 
