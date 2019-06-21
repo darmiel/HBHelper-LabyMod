@@ -1,7 +1,8 @@
-package eu.hywse.horstblocks.hbhelper.modules.chatgui.chatpanel;
+package eu.hywse.horstblocks.hbhelper.modules.chatgui.gui;
 
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
 import eu.hywse.horstblocks.hbhelper.utils.PlayerHead;
+import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,7 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @SuppressWarnings("WeakerAccess")
-public class ChatPanel extends Panel {
+@Getter
+public class UserChatDesigner extends Panel {
 
     JTabbedPane tabbedPane;
     // Components
@@ -29,7 +31,7 @@ public class ChatPanel extends Panel {
 
     private String username;
 
-    public ChatPanel(String username, JTabbedPane tabbedPane) {
+    public UserChatDesigner(String username, JTabbedPane tabbedPane) {
         this.username = username;
         this.tabbedPane = tabbedPane;
 

@@ -1,13 +1,15 @@
 package eu.hywse.horstblocks.hbhelper.modules.chatgui;
 
-import eu.hywse.horstblocks.hbhelper.modules.chatgui.chatpanel.UserChat;
+import eu.hywse.horstblocks.hbhelper.HelperAddon;
+import eu.hywse.horstblocks.hbhelper.modules.Module;
+import eu.hywse.horstblocks.hbhelper.modules.chatgui.gui.UserChat;
 import lombok.Getter;
 
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainChatGui extends JFrame {
+public class ChatGuiModule extends JFrame implements Module {
 
     @Getter
     private static Map<String, UserChat> chats = new HashMap<>();
@@ -15,7 +17,7 @@ public class MainChatGui extends JFrame {
     @Getter
     private JTabbedPane tabbedPane;
 
-    public MainChatGui() {
+    public ChatGuiModule() {
         add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
         pack();
 
@@ -26,19 +28,35 @@ public class MainChatGui extends JFrame {
                 chat.updateTitle();
             }
         });
+
+        if (tabbedPane.getTabCount() == 0) {
+            setSize(800, 400);
+        }
     }
 
-    public UserChat getChat(String username) {
+    public static UserChat getChat(String username) {
         if (!chats.containsKey(username)) {
-            UserChat chat = new UserChat(username, tabbedPane);
+            UserChat chat = new UserChat(username, HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
             chat.open();
+
             chats.put(username, chat);
         }
+
         return chats.getOrDefault(username, null);
     }
 
-    public boolean hasChat(String username) {
+    public static boolean hasChat(String username) {
         return chats.containsKey(username);
+    }
+
+    @Override
+    public void onClick() {
+        setVisible(!isVisible());
+    }
+
+    @Override
+    public String moduleName() {
+        return "ChatGUI";
     }
 
 }

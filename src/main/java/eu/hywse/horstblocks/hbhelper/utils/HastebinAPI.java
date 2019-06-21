@@ -60,7 +60,7 @@ public class HastebinAPI {
                 clipboard.setContents(selection, selection);
             }
 
-            /* Open in webbrowser */
+            /* Open in Webbrowser */
             if (open) {
                 LabyMod.getInstance().openWebpage(res, false);
             }

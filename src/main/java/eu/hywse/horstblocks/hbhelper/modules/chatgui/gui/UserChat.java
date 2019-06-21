@@ -1,8 +1,8 @@
-package eu.hywse.horstblocks.hbhelper.modules.chatgui.chatpanel;
+package eu.hywse.horstblocks.hbhelper.modules.chatgui.gui;
 
 
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
-import eu.hywse.horstblocks.hbhelper.modules.chatgui.MainChatGui;
+import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.utils.HastebinAPI;
 import eu.hywse.horstblocks.hbhelper.utils.PlayerHead;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class UserChat extends ChatPanel {
+public class UserChat extends UserChatDesigner {
 
     @Getter
     private int unreadMessages = 0;
@@ -42,7 +42,7 @@ public class UserChat extends ChatPanel {
         // Async icon load
         HelperAddon.getService().execute(() -> {
             int index = getTabIndex();
-            if(index == -1) {
+            if (index == -1) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -50,7 +50,7 @@ public class UserChat extends ChatPanel {
                 }
             }
             index = getTabIndex();
-            if(index == -1) {
+            if (index == -1) {
                 return;
             }
 
@@ -117,7 +117,7 @@ public class UserChat extends ChatPanel {
 
         // Close
         btnCloseRead.addActionListener(e -> {
-            for (UserChat chat : MainChatGui.getChats().values()) {
+            for (UserChat chat : ChatGuiModule.getChats().values()) {
                 if (chat.getUnreadMessages() == 0) {
                     chat.close();
                 }
@@ -126,7 +126,7 @@ public class UserChat extends ChatPanel {
 
         btnDeleteChat.addActionListener(e -> {
             close();
-            MainChatGui.getChats().values().removeIf(chat -> chat == this);
+            ChatGuiModule.getChats().values().removeIf(chat -> chat == this);
         });
     }
 
@@ -134,7 +134,7 @@ public class UserChat extends ChatPanel {
         closed = false;
         addTab(tabbedPane);
 
-        HelperAddon.getInstance().getMainChatGui().pack();
+        HelperAddon.getInstance().getChatGuiModule().pack();
         appendComment("\uD83D\uDC4B Chat geöffnet am " + new SimpleDateFormat("dd.MM.yyyy 'um' HH:mm:ss.SS").format(new Date()));
     }
 
@@ -169,15 +169,12 @@ public class UserChat extends ChatPanel {
         if (!inFocus()) {
             unreadMessages++;
 
-            // Play sound
-            if (HelperAddon.getInstance().isPlaySound()) {
-                // TODO: Ton änderbar machen lassen
-                SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.experience_orb.pickup"));
-                if (event == null) {
-                    System.out.println("WARNING! Sound not found!");
-                } else {
-                    Minecraft.getMinecraft().player.playSound(event, 1F, 1F);
-                }
+            // TODO: Ton ändern
+            SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.experience_orb.pickup"));
+            if (event == null) {
+                System.out.println("WARNING! Sound not found!");
+            } else {
+                Minecraft.getMinecraft().player.playSound(event, 1F, 1F);
             }
         }
 
@@ -196,7 +193,7 @@ public class UserChat extends ChatPanel {
         String message = (msg == null ? txtMsg.getText().trim() : msg);
 
         // Min length
-        if(message.length() == 0) {
+        if (message.length() == 0) {
             return;
         }
 
