@@ -39,7 +39,7 @@ public class UserChatDesigner extends Panel {
         btnSend = new JButton("Senden");
         btnClearChat = new JButton("Chat leeren");
         btnUploadHastebin = new JButton("Hastebin");
-        btnCloseRead = new JButton("☠"); // ☠
+        btnCloseRead = new JButton("C"); // ☠
         btnDeleteChat = new JButton("⚠ Löschen"); // ⚠
 
         // Tooltip

@@ -5,6 +5,8 @@ import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import net.labymod.api.events.MessageReceiveEvent;
 import net.labymod.utils.ModColor;
 
+import javax.swing.*;
+
 public class PrivateChatListener implements MessageReceiveEvent {
 
     @Override
@@ -21,7 +23,7 @@ public class PrivateChatListener implements MessageReceiveEvent {
 
         // Msg
         if (cleanMsg.startsWith("▌ MSG > ")) {
-            HelperAddon.getService().submit(() -> {
+            SwingUtilities.invokeLater(() -> {
                 String clean = cleanMsg.substring(8);
 
                 // Empfangen

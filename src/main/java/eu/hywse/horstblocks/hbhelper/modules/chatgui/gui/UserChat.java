@@ -14,6 +14,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +26,12 @@ public class UserChat extends UserChatDesigner {
 
     @Getter
     private boolean closed;
+
+    @Getter
+    private boolean locked;
+
+    private JPanel pnlTabPanel;
+    private JLabel lblTabTitle;
 
     public UserChat(String username, JTabbedPane tabbedPane) {
         super(username, tabbedPane);
@@ -39,26 +47,13 @@ public class UserChat extends UserChatDesigner {
         }
         tabbedPane.addTab(getUsername(), this);
 
-        JPanel pnlTab = new JPanel(new GridBagLayout());
-        pnlTab.setOpaque(true);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        pnlTab.add(new JLabel(tabbedPane.getTitleAt(getTabIndex())), gbc);
-        gbc.gridx++;
-        gbc.weightx = 0;
-        pnlTab.add(new JButton("\uD83D\uDD12"), gbc);
-        tabbedPane.setTabComponentAt(getTabIndex(), pnlTab);
-
         // Async icon load
-        HelperAddon.getService().execute(() -> {
+        SwingUtilities.invokeLater(() -> {
             int index = getTabIndex();
             if (index == -1) {
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
 
                 }
             }
@@ -67,7 +62,69 @@ public class UserChat extends UserChatDesigner {
                 return;
             }
 
-            tabbedPane.setIconAt(index, PlayerHead.getIcon(getUsername(), 32));
+            /* Tab Panel */
+
+            pnlTabPanel = new JPanel(new GridBagLayout());
+            pnlTabPanel.setOpaque(false);
+
+            GridBagConstraints gbc = new GridBagConstraints();
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 2;
+            lblTabTitle = new JLabel(tabbedPane.getTitleAt(getTabIndex()),
+                    PlayerHead.getIcon(getUsername(), 24),
+                    JLabel.LEFT);
+            pnlTabPanel.add(lblTabTitle, gbc);
+
+            gbc.gridx++;
+            gbc.weightx = 1;
+            pnlTabPanel.add(new JLabel(" "));
+
+
+            gbc.gridx++;
+            gbc.weightx = 1;
+            JButton btnLock = new JButton("✔");
+            btnLock.addActionListener(e -> {
+                if(btnLock.getText().equalsIgnoreCase("✔")) {
+                    btnLock.setText("✘");
+                    UserChat.this.locked = true;
+
+                    lblTabTitle.setForeground(Color.BLACK);
+                } else {
+                    btnLock.setText("✔");
+                    UserChat.this.locked = false;
+
+                    lblTabTitle.setForeground(Color.BLUE);
+                }
+            });
+            pnlTabPanel.add(btnLock);
+
+            gbc.gridx++;
+            gbc.weightx = 0;
+            JButton btnScndClose = new JButton("X");
+            btnScndClose.addActionListener(e -> close());
+            pnlTabPanel.add(btnScndClose, gbc);
+
+            MouseAdapter mouseAdapter = new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+
+                    if (e.getButton() == MouseEvent.BUTTON2) {
+                        close();
+                    }
+
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        tabbedPane.setSelectedComponent(UserChat.this);
+                    }
+                }
+            };
+
+            pnlTabPanel.addMouseListener(mouseAdapter);
+            lblTabTitle.addMouseListener(mouseAdapter);
+
+            tabbedPane.setTabComponentAt(getTabIndex(), pnlTabPanel);
         });
     }
 
@@ -131,14 +188,15 @@ public class UserChat extends UserChatDesigner {
         // Close
         btnCloseRead.addActionListener(e -> {
             for (UserChat chat : ChatGuiModule.getChats().values()) {
-                if (chat.getUnreadMessages() == 0) {
+                if (chat.getUnreadMessages() == 0
+                        && !chat.isLocked()) {
                     chat.close();
                 }
             }
         });
 
         btnDeleteChat.addActionListener(e -> {
-            close();
+            close(true);
             ChatGuiModule.getChats().values().removeIf(chat -> chat == this);
         });
     }
@@ -151,7 +209,27 @@ public class UserChat extends UserChatDesigner {
         appendComment("\uD83D\uDC4B Chat geöffnet am " + new SimpleDateFormat("dd.MM.yyyy 'um' HH:mm:ss.SS").format(new Date()));
     }
 
+
     public void close() {
+        close(false);
+    }
+
+    public void close(boolean force) {
+
+        // Check for locked
+        if (isLocked() && !force) {
+            JOptionPane.showMessageDialog(this,
+                    "Der Chat wurde gelockt\n- daher kann er nicht geschlossen werden!",
+                    "Fehler",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return;
+        }
+
+        if(force) {
+            locked = false;
+        }
+
         closed = true;
         tabbedPane.remove(this);
 
@@ -160,18 +238,14 @@ public class UserChat extends UserChatDesigner {
     }
 
     public void updateTitle() {
-        int index = getTabIndex();
-        if (index == -1) {
-            return;
+        String text = getUsername() + (unreadMessages > 0 ? " (" + unreadMessages + ")" : "");
+
+        if (lblTabTitle != null) {
+            lblTabTitle.setText(" " + text);
         }
 
-        if (inFocus()) {
-            unreadMessages = 0;
-        }
-
-        tabbedPane.setTitleAt(index, getUsername() + (unreadMessages > 0 ? " (" + unreadMessages + ")" : ""));
+        tabbedPane.setTitleAt(getTabIndex(), text);
     }
-
 
     /*
      * Methods
@@ -182,7 +256,6 @@ public class UserChat extends UserChatDesigner {
         if (!inFocus()) {
             unreadMessages++;
 
-            // TODO: Ton ändern
             SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.experience_orb.pickup"));
             if (event == null) {
                 System.out.println("WARNING! Sound not found!");
@@ -199,11 +272,7 @@ public class UserChat extends UserChatDesigner {
     }
 
     private void send() {
-        send(null);
-    }
-
-    private void send(String msg) {
-        String message = (msg == null ? txtMsg.getText().trim() : msg);
+        String message = /*(msg == null ? */ txtMsg.getText().trim() /* : msg) */;
 
         // Min length
         if (message.length() == 0) {
@@ -215,14 +284,16 @@ public class UserChat extends UserChatDesigner {
             message = message.substring(0, 128);
         }
 
+        message = message.replace("\u00A7", "&");
+
         // Nachricht senden
         Minecraft.getMinecraft().player.sendChatMessage("/msg " + getUsername() + " " + message);
 
         // Fokus auf Chatfeld
-        if (msg == null) {
-            txtMsg.grabFocus();
-            txtMsg.setText("");
-        }
+//        if (msg == null) {
+        txtMsg.grabFocus();
+        txtMsg.setText("");
+//        }
 
         // Update unread
         updateTitle();
