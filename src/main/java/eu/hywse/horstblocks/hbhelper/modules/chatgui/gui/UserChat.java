@@ -16,6 +16,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,7 +34,7 @@ public class UserChat extends UserChatDesigner {
     private JPanel pnlTabPanel;
     private JLabel lblTabTitle;
 
-    public UserChat(String username, JTabbedPane tabbedPane) {
+    public UserChat(String username, JTabbedPane tabbedPane) throws IOException {
         super(username, tabbedPane);
         registerListener();
     }
@@ -41,7 +42,7 @@ public class UserChat extends UserChatDesigner {
     private void addTab(JTabbedPane tabbedPane) {
         // Prüfe ob der Tab vielleicht schon offen ist
         for (Component component : tabbedPane.getComponents()) {
-            if(!component.isVisible()) {
+            if (!component.isVisible()) {
                 continue;
             }
             if (SwingUtilities.isDescendingFrom(component, this)) {
@@ -212,7 +213,10 @@ public class UserChat extends UserChatDesigner {
 
         addTab(tabbedPane);
 
-//        HelperAddon.getInstance().getChatGuiModule().pack();
+        if (HelperAddon.getInstance().getChatGuiModule().getTabbedPane().getTabCount() == 1) {
+            HelperAddon.getInstance().getChatGuiModule().pack();
+        }
+
         appendComment("\uD83D\uDC4B Chat geöffnet am " + new SimpleDateFormat("dd.MM.yyyy 'um' HH:mm:ss.SS").format(new Date()));
     }
 
@@ -226,7 +230,8 @@ public class UserChat extends UserChatDesigner {
 
     /**
      * Schließt eine Konversation mit einem Nutzer
-     * @param force     Ignoriere LOCK-Einstellung
+     *
+     * @param force Ignoriere LOCK-Einstellung
      */
     public void close(boolean force) {
 
@@ -268,14 +273,15 @@ public class UserChat extends UserChatDesigner {
             lblTabTitle.setText(" " + text);
         }
 
-        if(getTabIndex() != -1) {
+        if (getTabIndex() != -1) {
             tabbedPane.setTitleAt(getTabIndex(), text);
         }
     }
 
     /**
      * Zeigt eine empfangene Nachricht im Chatfenster an
-     * @param message   Empfangene Nachricht
+     *
+     * @param message Empfangene Nachricht
      */
     public void received(String message) {
         addChatMessage(getUsername(), message);
@@ -296,7 +302,8 @@ public class UserChat extends UserChatDesigner {
 
     /**
      * Zeigt eine gesendete Nachricht im Chatfenster an
-     * @param message   Gesendete Nachricht
+     *
+     * @param message Gesendete Nachricht
      */
     public void sent(String message) {
         addChatMessage(null, message);

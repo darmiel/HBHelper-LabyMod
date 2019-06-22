@@ -1,9 +1,12 @@
 package eu.hywse.horstblocks.hbhelper.modules.chatgui.gui;
 
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
+import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.utils.PlayerHead;
+import eu.hywse.horstblocks.hbhelper.utils.StretchIcon;
 import lombok.Getter;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
@@ -11,6 +14,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,16 +35,20 @@ public class UserChatDesigner extends Panel {
 
     private String username;
 
-    public UserChatDesigner(String username, JTabbedPane tabbedPane) {
+    public UserChatDesigner(String username, JTabbedPane tabbedPane) throws IOException {
         this.username = username;
         this.tabbedPane = tabbedPane;
 
         btnClose = new JButton("\uD83D\uDD12");
-        btnSend = new JButton("Senden");
-        btnClearChat = new JButton("Chat leeren");
+        btnSend = new JButton("");
+        btnSend.setIcon(new StretchIcon(ImageIO.read(ChatGuiModule.TEXTURE_SEND.getInputStream())));
+
+        btnClearChat = new JButton("Leeren");
+
         btnUploadHastebin = new JButton("Hastebin");
         btnCloseRead = new JButton("C"); // ☠
-        btnDeleteChat = new JButton("⚠ Löschen"); // ⚠
+        btnDeleteChat = new JButton(""); // ⚠
+        btnDeleteChat.setIcon(new StretchIcon(ImageIO.read(ChatGuiModule.TEXTURE_DELETE.getInputStream())));
 
         // Tooltip
         btnClose.setToolTipText("Schließt den aktuellen Chat");
@@ -57,13 +65,13 @@ public class UserChatDesigner extends Panel {
         setPreferredSize(new Dimension(1314, 749));
         setLayout(null);
 
-        btnClose.setBounds(1195, 30, 50, 25);
-        btnCloseRead.setBounds(1245, 30, 50, 25);
+        btnClose.setBounds(1195, 30, 50, 30);
+        btnCloseRead.setBounds(1245, 30, 50, 30);
 
-        btnClearChat.setBounds(1195, 65, 100, 25);
-        btnUploadHastebin.setBounds(1195, 100, 100, 25);
+        btnClearChat.setBounds(1195, 65, 100, 30);
+        btnUploadHastebin.setBounds(1195, 100, 100, 30);
         btnSend.setBounds(1080, 680, 100, 45);
-        btnDeleteChat.setBounds(1195, 680, 100, 25);
+        btnDeleteChat.setBounds(1195, 680, 100, 30);
 
         txtChat.setBounds(25, 30, 1157, 635);
         txtMsg.setBounds(25, 680, 1040, 50);

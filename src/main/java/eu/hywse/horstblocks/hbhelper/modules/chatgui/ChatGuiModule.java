@@ -3,9 +3,14 @@ package eu.hywse.horstblocks.hbhelper.modules.chatgui;
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
 import eu.hywse.horstblocks.hbhelper.modules.Module;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.gui.UserChat;
+import eu.hywse.horstblocks.hbhelper.utils.ResourceUtil;
 import lombok.Getter;
 import net.labymod.main.LabyMod;
 import net.labymod.settings.elements.ControlElement;
+import net.labymod.utils.DrawUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.MinecraftError;
 import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
@@ -25,8 +30,16 @@ public class ChatGuiModule extends JFrame implements Module {
     @Getter
     private JTabbedPane tabbedPane;
 
+    public static final IResource TEXTURE_HEAD_128 = ResourceUtil.getResource("icons/horst_head.png");
+    public static final IResource TEXTURE_DELETE = ResourceUtil.getResource("icons/delete_icon.png");
+    public static final IResource TEXTURE_EMPTY = ResourceUtil.getResource("icons/empty_icon.png");
+    public static final IResource TEXTURE_SEND = ResourceUtil.getResource("icons/send_icon.png");
+
     public ChatGuiModule() {
         add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
+
+        System.out.println(TEXTURE_HEAD_128);
+        System.out.println(TEXTURE_HEAD_128.getInputStream());
 
         // Listeners
         tabbedPane.addChangeListener(e -> {
@@ -52,7 +65,7 @@ public class ChatGuiModule extends JFrame implements Module {
         });
         updateTitle();
         try {
-            setIconImage(ImageIO.read(new URL("https://upload.horstblocks.de/uploads/128.png").openStream()));
+            setIconImage(ImageIO.read(TEXTURE_HEAD_128.getInputStream()));
         } catch (IOException e) {
             System.out.println("Konnte Icon nicht laden: " + e.getMessage());
         }
@@ -60,7 +73,12 @@ public class ChatGuiModule extends JFrame implements Module {
 
     public static UserChat getChat(String username) {
         if (!chats.containsKey(username)) {
-            UserChat chat = new UserChat(username, HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
+            UserChat chat;
+            try {
+                chat = new UserChat(username, HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
+            } catch (IOException e) {
+                return null;
+            }
             chat.open();
 
             chats.put(username, chat);
