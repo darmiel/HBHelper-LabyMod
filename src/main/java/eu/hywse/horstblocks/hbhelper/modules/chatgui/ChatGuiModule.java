@@ -27,7 +27,6 @@ public class ChatGuiModule extends JFrame implements Module {
 
     public ChatGuiModule() {
         add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
-        pack();
 
         // Listeners
         tabbedPane.addChangeListener(e -> {

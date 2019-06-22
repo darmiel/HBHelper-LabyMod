@@ -41,6 +41,9 @@ public class UserChat extends UserChatDesigner {
     private void addTab(JTabbedPane tabbedPane) {
         // Prüfe ob der Tab vielleicht schon offen ist
         for (Component component : tabbedPane.getComponents()) {
+            if(!component.isVisible()) {
+                continue;
+            }
             if (SwingUtilities.isDescendingFrom(component, this)) {
                 return;
             }
@@ -86,16 +89,16 @@ public class UserChat extends UserChatDesigner {
             gbc.weightx = 1;
             JButton btnLock = new JButton("✔");
             btnLock.addActionListener(e -> {
-                if(btnLock.getText().equalsIgnoreCase("✔")) {
-                    btnLock.setText("✘");
+                if (btnLock.getText().equalsIgnoreCase("✔")) {
+                    btnLock.setText("LOCKED");
                     UserChat.this.locked = true;
-
-                    lblTabTitle.setForeground(Color.BLACK);
+                    lblTabTitle.setForeground(Color.BLUE);
+                    lblTabTitle.setFont(lblTabTitle.getFont().deriveFont(lblTabTitle.getFont().getStyle() | Font.BOLD));
                 } else {
                     btnLock.setText("✔");
                     UserChat.this.locked = false;
-
-                    lblTabTitle.setForeground(Color.BLUE);
+                    lblTabTitle.setForeground(Color.BLACK);
+                    lblTabTitle.setFont(lblTabTitle.getFont().deriveFont(lblTabTitle.getFont().getStyle() & ~Font.BOLD));
                 }
             });
             pnlTabPanel.add(btnLock);
@@ -201,19 +204,30 @@ public class UserChat extends UserChatDesigner {
         });
     }
 
+    /**
+     * Öffnet eine Konversation mit einem user
+     */
     public void open() {
         closed = false;
+
         addTab(tabbedPane);
 
-        HelperAddon.getInstance().getChatGuiModule().pack();
+//        HelperAddon.getInstance().getChatGuiModule().pack();
         appendComment("\uD83D\uDC4B Chat geöffnet am " + new SimpleDateFormat("dd.MM.yyyy 'um' HH:mm:ss.SS").format(new Date()));
     }
 
 
+    /**
+     * Schließt eine Konversation mit einem Nutzer (FORCED)
+     */
     public void close() {
         close(false);
     }
 
+    /**
+     * Schließt eine Konversation mit einem Nutzer
+     * @param force     Ignoriere LOCK-Einstellung
+     */
     public void close(boolean force) {
 
         // Check for locked
@@ -226,7 +240,7 @@ public class UserChat extends UserChatDesigner {
             return;
         }
 
-        if(force) {
+        if (force) {
             locked = false;
         }
 
@@ -235,20 +249,33 @@ public class UserChat extends UserChatDesigner {
 
         // Bei neuer Nachricht wieder öffnen
         appendComment("\uD83D\uDD12 Chat geschlossen am " + new SimpleDateFormat("dd.MM.yyyy 'um' HH:mm:ss.SS").format(new Date()));
+
+        System.out.println("Closed Chat with " + getUsername());
     }
 
+    /**
+     * Aktualisiert den Tab-Title
+     * Prüft nach ungelesenen Nachrichten
+     */
     public void updateTitle() {
+        if (inFocus()) {
+            unreadMessages = 0;
+        }
+
         String text = getUsername() + (unreadMessages > 0 ? " (" + unreadMessages + ")" : "");
 
         if (lblTabTitle != null) {
             lblTabTitle.setText(" " + text);
         }
 
-        tabbedPane.setTitleAt(getTabIndex(), text);
+        if(getTabIndex() != -1) {
+            tabbedPane.setTitleAt(getTabIndex(), text);
+        }
     }
 
-    /*
-     * Methods
+    /**
+     * Zeigt eine empfangene Nachricht im Chatfenster an
+     * @param message   Empfangene Nachricht
      */
     public void received(String message) {
         addChatMessage(getUsername(), message);
@@ -267,10 +294,18 @@ public class UserChat extends UserChatDesigner {
         updateTitle();
     }
 
+    /**
+     * Zeigt eine gesendete Nachricht im Chatfenster an
+     * @param message   Gesendete Nachricht
+     */
     public void sent(String message) {
         addChatMessage(null, message);
     }
 
+    /**
+     * Sendet die Nachricht, die in das Textfeld eingegeben wurde.
+     * Anschließend wird die Eingabetextbox ausgewählt
+     */
     private void send() {
         String message = /*(msg == null ? */ txtMsg.getText().trim() /* : msg) */;
 

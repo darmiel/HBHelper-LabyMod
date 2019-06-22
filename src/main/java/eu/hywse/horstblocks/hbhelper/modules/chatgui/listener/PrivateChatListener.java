@@ -31,22 +31,22 @@ public class PrivateChatListener implements MessageReceiveEvent {
                     String message = clean.substring(clean.indexOf(">") + 1).trim();
                     String username = clean.substring(0, clean.indexOf(">")).trim();
 
-                    ChatGuiModule.getChat(username).received(message);
-
                     // Reopen chat
                     if (ChatGuiModule.getChat(username).isClosed()) {
                         ChatGuiModule.getChat(username).open();
                     }
+
+                    ChatGuiModule.getChat(username).received(message);
                 } else if (clean.matches("[A-Za-z0-9_]{1,16}\\s<(.*)")) {
                     String message = clean.substring(clean.indexOf("<") + 1).trim();
                     String username = clean.substring(0, clean.indexOf("<")).trim();
 
-                    ChatGuiModule.getChat(username).sent(message);
-
                     // Reopen chat
                     if (ChatGuiModule.getChat(username).isClosed()) {
                         ChatGuiModule.getChat(username).open();
                     }
+
+                    ChatGuiModule.getChat(username).sent(message);
                 }
             });
         }

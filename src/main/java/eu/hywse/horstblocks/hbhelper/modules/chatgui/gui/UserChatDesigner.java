@@ -103,7 +103,7 @@ public class UserChatDesigner extends Panel {
 
         long start = System.currentTimeMillis();
         appendTxtChatIcon(PlayerHead.getIcon(from != null ? getUsername() : HelperAddon.getInstance().getApi().getPlayerUsername(), 24));
-        System.out.println("Took: " + (System.currentTimeMillis() - start) + " ms");
+        // System.out.println("Took: " + (System.currentTimeMillis() - start) + " ms");
 
         appendTxtChat(" " + (from == null ? "Du" : from), from == null ? Color.RED : Color.BLUE);
         appendTxtChat(" >> ", Color.DARK_GRAY);
