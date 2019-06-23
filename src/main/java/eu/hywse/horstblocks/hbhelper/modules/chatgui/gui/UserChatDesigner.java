@@ -13,7 +13,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

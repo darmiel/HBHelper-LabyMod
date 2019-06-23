@@ -5,6 +5,7 @@ import eu.hywse.horstblocks.hbhelper.HelperAddon;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.utils.HastebinAPI;
 import eu.hywse.horstblocks.hbhelper.utils.PlayerHead;
+import eu.hywse.horstblocks.hbhelper.utils.Settings;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +17,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,7 +34,7 @@ public class UserChat extends UserChatDesigner {
     private JPanel pnlTabPanel;
     private JLabel lblTabTitle;
 
-    public UserChat(String username, JTabbedPane tabbedPane) throws IOException {
+    public UserChat(String username, JTabbedPane tabbedPane) {
         super(username, tabbedPane);
         registerListener();
     }
@@ -289,11 +289,13 @@ public class UserChat extends UserChatDesigner {
         if (!inFocus()) {
             unreadMessages++;
 
-            SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.experience_orb.pickup"));
-            if (event == null) {
-                System.out.println("WARNING! Sound not found!");
-            } else {
-                Minecraft.getMinecraft().player.playSound(event, 1F, 1F);
+            if (Settings.msgPlaySoundOnMessage) {
+                SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.experience_orb.pickup"));
+                if (event == null) {
+                    System.out.println("WARNING! Sound not found!");
+                } else {
+                    Minecraft.getMinecraft().player.playSound(event, 1F, 1F);
+                }
             }
         }
 

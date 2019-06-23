@@ -19,14 +19,12 @@ import java.util.Map;
 
 public class ChatGuiModule extends JFrame implements Module {
 
-    @Getter
-    private static Map<String, UserChat> chats = new HashMap<>();
-
-    @Getter
-    private JTabbedPane tabbedPane;
-
     public static final IResource TEXTURE_HEAD_128 = ResourceUtil.getResource("icons/horst_head.png");
     public static final IResource TEXTURE_SEND = ResourceUtil.getResource("icons/send_icon.png");
+    @Getter
+    private static Map<String, UserChat> chats = new HashMap<>();
+    @Getter
+    private JTabbedPane tabbedPane;
 
     public ChatGuiModule() {
         add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
@@ -53,6 +51,7 @@ public class ChatGuiModule extends JFrame implements Module {
             public void focusGained(FocusEvent e) {
                 updateTitle();
             }
+
             @Override
             public void focusLost(FocusEvent e) {
                 updateTitle();
@@ -68,12 +67,7 @@ public class ChatGuiModule extends JFrame implements Module {
 
     public static UserChat getChat(String username) {
         if (!chats.containsKey(username)) {
-            UserChat chat;
-            try {
-                chat = new UserChat(username, HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
-            } catch (IOException e) {
-                return null;
-            }
+            UserChat chat = new UserChat(username, HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
             chat.open();
 
             chats.put(username, chat);

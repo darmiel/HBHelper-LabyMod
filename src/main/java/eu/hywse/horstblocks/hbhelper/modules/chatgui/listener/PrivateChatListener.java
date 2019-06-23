@@ -2,10 +2,12 @@ package eu.hywse.horstblocks.hbhelper.modules.chatgui.listener;
 
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
+import eu.hywse.horstblocks.hbhelper.utils.Settings;
 import net.labymod.api.events.MessageReceiveEvent;
 import net.labymod.utils.ModColor;
 
 import javax.swing.*;
+import java.util.Set;
 
 public class PrivateChatListener implements MessageReceiveEvent {
 
@@ -25,6 +27,7 @@ public class PrivateChatListener implements MessageReceiveEvent {
         if (cleanMsg.startsWith("▌ MSG > ")) {
             SwingUtilities.invokeLater(() -> {
                 String clean = cleanMsg.substring(8);
+                boolean action = false;
 
                 // Empfangen
                 if (clean.matches("[A-Za-z0-9_]{1,16}\\s>(.*)")) {
@@ -37,6 +40,7 @@ public class PrivateChatListener implements MessageReceiveEvent {
                     }
 
                     ChatGuiModule.getChat(username).received(message);
+                    action = true;
                 } else if (clean.matches("[A-Za-z0-9_]{1,16}\\s<(.*)")) {
                     String message = clean.substring(clean.indexOf("<") + 1).trim();
                     String username = clean.substring(0, clean.indexOf("<")).trim();
@@ -47,6 +51,14 @@ public class PrivateChatListener implements MessageReceiveEvent {
                     }
 
                     ChatGuiModule.getChat(username).sent(message);
+                    action = true;
+                }
+
+                if(action) {
+                    if(Settings.msgOpenGuiOnMessage
+                        && !HelperAddon.getInstance().getChatGuiModule().isVisible()) {
+                        HelperAddon.getInstance().getChatGuiModule().setVisible(true);
+                    }
                 }
             });
         }
