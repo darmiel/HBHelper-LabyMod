@@ -290,7 +290,7 @@ public class UserChat extends UserChatDesigner {
             unreadMessages++;
 
             if (Settings.msgPlaySoundOnMessage) {
-                SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.experience_orb.pickup"));
+                SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(Settings.msgSoundFileName));
                 if (event == null) {
                     System.out.println("WARNING! Sound not found!");
                 } else {
