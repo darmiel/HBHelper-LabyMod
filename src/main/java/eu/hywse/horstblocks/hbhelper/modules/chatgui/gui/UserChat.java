@@ -134,11 +134,11 @@ public class UserChat extends UserChatDesigner {
 
     private void registerListener() {
         // Close Button
-        btnClose.addActionListener(e -> close());
+        btnCloseSingle.addActionListener(e -> close());
 
         // Send  Button
         btnSend.addActionListener(e -> send());
-        txtMsg.addKeyListener(new KeyAdapter() {
+        txtChatBox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyChar() == '\n') {
@@ -150,13 +150,13 @@ public class UserChat extends UserChatDesigner {
 
         // Clear chat
         btnClearChat.addActionListener(e -> {
-            txtChat.setText("");
+            txtChatBox.setText("");
             appendComment("Chat geleert!");
         });
 
         // Updateload
         btnUploadHastebin.addActionListener(e -> {
-            String content = txtChat.getText();
+            String content = txtChatBox.getText();
             StringBuilder result = new StringBuilder();
 
             for (String line : content.split("\\n")) {
@@ -190,7 +190,7 @@ public class UserChat extends UserChatDesigner {
         });
 
         // Close
-        btnCloseRead.addActionListener(e -> {
+        btnCloseAll.addActionListener(e -> {
             for (UserChat chat : ChatGuiModule.getChats().values()) {
                 if (chat.getUnreadMessages() == 0
                         && !chat.isLocked()) {
@@ -199,7 +199,7 @@ public class UserChat extends UserChatDesigner {
             }
         });
 
-        btnDeleteChat.addActionListener(e -> {
+        btnDelete.addActionListener(e -> {
             close(true);
             ChatGuiModule.getChats().values().removeIf(chat -> chat == this);
         });
@@ -314,7 +314,7 @@ public class UserChat extends UserChatDesigner {
      * Anschließend wird die Eingabetextbox ausgewählt
      */
     private void send() {
-        String message = /*(msg == null ? */ txtMsg.getText().trim() /* : msg) */;
+        String message = /*(msg == null ? */ txtChatBox.getText().trim() /* : msg) */;
 
         // Min length
         if (message.length() == 0) {
@@ -333,8 +333,8 @@ public class UserChat extends UserChatDesigner {
 
         // Fokus auf Chatfeld
 //        if (msg == null) {
-        txtMsg.grabFocus();
-        txtMsg.setText("");
+        txtChatBox.grabFocus();
+        txtChatBox.setText("");
 //        }
 
         // Update unread

@@ -1,13 +1,12 @@
 package eu.hywse.horstblocks.hbhelper.modules.chatgui.gui;
 
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
-import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.utils.PlayerHead;
-import eu.hywse.horstblocks.hbhelper.utils.StretchIcon;
 import lombok.Getter;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
@@ -20,90 +19,107 @@ import java.util.Date;
 
 @SuppressWarnings("WeakerAccess")
 @Getter
-public class UserChatDesigner extends Panel {
+public class UserChatDesigner extends JPanel {
 
     JTabbedPane tabbedPane;
-    // Components
-    JButton btnClose;
-    JButton btnSend;
-    JButton btnClearChat;
-    JButton btnUploadHastebin;
-    JButton btnCloseRead;
-    JButton btnDeleteChat;
-    JTextPane txtChat;
-    JTextArea txtMsg;
+    JButton btnSend = new JButton("Absenden");
+    JScrollPane scrollChatBox;
+    JTextPane txtChatBox = new JTextPane();
+    JButton btnCloseSingle = new JButton("\uD83D\uDD12");
+    JButton btnClearChat = new JButton("Chat leeren");
+    JButton btnDelete = new JButton("L\u00F6schen");
+    JLabel lblChatHochladen = new JLabel("Chat hochladen auf:");
+    JButton btnUploadHastebin = new JButton("Hastebin");
+    JButton btnCloseAll = new JButton("\uD83D\uDD12\uD83D\uDD12");
+    JTextField txtInputField = new JTextField();
 
     private String username;
 
-    public UserChatDesigner(String username, JTabbedPane tabbedPane) throws IOException {
+    public UserChatDesigner(String username, JTabbedPane tabbedPane) {
         this.username = username;
         this.tabbedPane = tabbedPane;
 
-        btnClose = new JButton("\uD83D\uDD12");
-        btnSend = new JButton("");
-        btnSend.setIcon(new StretchIcon(ImageIO.read(ChatGuiModule.TEXTURE_SEND.getInputStream())));
-
-        btnClearChat = new JButton("Leeren");
-
-        btnUploadHastebin = new JButton("Hastebin");
-        btnCloseRead = new JButton("C"); // ☠
-        btnDeleteChat = new JButton(""); // ⚠
-        btnDeleteChat.setIcon(new StretchIcon(ImageIO.read(ChatGuiModule.TEXTURE_DELETE.getInputStream())));
+        this.scrollChatBox = new JScrollPane(txtChatBox,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         // Tooltip
-        btnClose.setToolTipText("Schließt den aktuellen Chat");
+        btnCloseSingle.setToolTipText("Schließt den aktuellen Chat");
         btnSend.setToolTipText("Sendet die Nachricht");
         btnClearChat.setToolTipText("Chatverlauf löschen");
         btnUploadHastebin.setToolTipText("Chatverlauf auf HasteBin hochladen");
-        btnCloseRead.setToolTipText("Alle gelesenen Chatverläufe schließen");
-        btnDeleteChat.setToolTipText("Chatverlauf löschen");
+        btnCloseAll.setToolTipText("Alle gelesenen Chatverläufe schließen");
+        btnClearChat.setToolTipText("Chatverlauf löschen");
 
-
-        txtChat = new JTextPane();
-        txtMsg = new JTextArea(5, 5);
-
-        setPreferredSize(new Dimension(1314, 749));
-        setLayout(null);
-
-        btnClose.setBounds(1195, 30, 50, 30);
-        btnCloseRead.setBounds(1245, 30, 50, 30);
-
-        btnClearChat.setBounds(1195, 65, 100, 30);
-        btnUploadHastebin.setBounds(1195, 100, 100, 30);
-        btnSend.setBounds(1080, 680, 100, 45);
-        btnDeleteChat.setBounds(1195, 680, 100, 30);
-
-        txtChat.setBounds(25, 30, 1157, 635);
-        txtMsg.setBounds(25, 680, 1040, 50);
+        // Settings
+        txtInputField.setText("");
+        txtInputField.setFont(new Font("Lucida Console", Font.PLAIN, 23));
+        txtInputField.setColumns(10);
 
         // Text Box
-        txtChat.setBorder(new EmptyBorder(10, 10, 10, 10));
-        txtChat.setMargin(new Insets(5, 5, 5, 5));
-        txtChat.setAutoscrolls(true);
-        txtChat.setEditable(false);
+        txtChatBox.setBorder(new EmptyBorder(10, 10, 10, 10));
+        txtChatBox.setMargin(new Insets(5, 5, 5, 5));
+        txtChatBox.setAutoscrolls(true);
+        txtChatBox.setEditable(false);
 
-        txtMsg.setFont(new Font("Lucida Console", Font.PLAIN, 24));
-
-        add(btnClose);
-        add(btnSend);
-        add(btnClearChat);
-        add(btnUploadHastebin);
-        add(btnCloseRead);
-        add(btnDeleteChat);
-
-        add(txtChat);
-        add(txtMsg);
+        GroupLayout groupLayout = new GroupLayout(this);
+        groupLayout.setHorizontalGroup(
+                groupLayout.createParallelGroup(Alignment.TRAILING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+                                        .addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+                                                .addComponent(txtInputField, GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(btnSend, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(scrollChatBox, GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE))
+                                .addGap(10)
+                                .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+                                        .addGroup(groupLayout.createSequentialGroup()
+                                                .addComponent(btnCloseSingle)
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(btnCloseAll, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                                        .addComponent(btnClearChat, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                                        .addComponent(btnUploadHastebin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblChatHochladen))
+                                .addContainerGap())
+        );
+        groupLayout.setVerticalGroup(
+                groupLayout.createParallelGroup(Alignment.TRAILING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(scrollChatBox, GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                                        .addGroup(groupLayout.createSequentialGroup()
+                                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                                        .addComponent(btnCloseSingle, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btnCloseAll, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18)
+                                                .addComponent(btnClearChat)
+                                                .addGap(18)
+                                                .addComponent(lblChatHochladen)
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(btnUploadHastebin, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+                                        .addComponent(btnDelete, Alignment.TRAILING)
+                                        .addComponent(btnSend, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtInputField, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())
+        );
+        setLayout(groupLayout);
     }
 
     public void appendComment(String comment) {
-        if (txtChat.getDocument().getLength() > 0) {
+        if (txtChatBox.getDocument().getLength() > 0) {
             appendTxtChat("\n", Color.BLACK);
         }
         appendTxtChat("// " + comment, Color.GRAY);
     }
 
     void addChatMessage(String from, String message) {
-        if (txtChat.getDocument().getLength() > 0) {
+        if (txtChatBox.getDocument().getLength() > 0) {
             appendTxtChat("\n", Color.BLACK);
         }
 
@@ -125,21 +141,21 @@ public class UserChatDesigner extends Panel {
         attributeSet = sc.addAttribute(attributeSet, StyleConstants.FontSize, 24);
         attributeSet = sc.addAttribute(attributeSet, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
-        txtChat.setEditable(true);
-        int len = txtChat.getDocument().getLength();
-        txtChat.setCaretPosition(len);
-        txtChat.setCharacterAttributes(attributeSet, false);
-        txtChat.replaceSelection(message);
-        txtChat.setEditable(false);
+        txtChatBox.setEditable(true);
+        int len = txtChatBox.getDocument().getLength();
+        txtChatBox.setCaretPosition(len);
+        txtChatBox.setCharacterAttributes(attributeSet, false);
+        txtChatBox.replaceSelection(message);
+        txtChatBox.setEditable(false);
     }
 
     void appendTxtChatIcon(Icon icon) {
-        int len = txtChat.getDocument().getLength();
+        int len = txtChatBox.getDocument().getLength();
 
-        txtChat.setEditable(true);
-        txtChat.setCaretPosition(len);
-        txtChat.insertIcon(icon);
-        txtChat.setEditable(false);
+        txtChatBox.setEditable(true);
+        txtChatBox.setCaretPosition(len);
+        txtChatBox.insertIcon(icon);
+        txtChatBox.setEditable(false);
     }
 
     public String getUsername() {

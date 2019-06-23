@@ -6,19 +6,14 @@ import eu.hywse.horstblocks.hbhelper.modules.chatgui.gui.UserChat;
 import eu.hywse.horstblocks.hbhelper.utils.ResourceUtil;
 import lombok.Getter;
 import net.labymod.main.LabyMod;
-import net.labymod.settings.elements.ControlElement;
-import net.labymod.utils.DrawUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.util.MinecraftError;
-import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +26,6 @@ public class ChatGuiModule extends JFrame implements Module {
     private JTabbedPane tabbedPane;
 
     public static final IResource TEXTURE_HEAD_128 = ResourceUtil.getResource("icons/horst_head.png");
-    public static final IResource TEXTURE_DELETE = ResourceUtil.getResource("icons/delete_icon.png");
-    public static final IResource TEXTURE_EMPTY = ResourceUtil.getResource("icons/empty_icon.png");
     public static final IResource TEXTURE_SEND = ResourceUtil.getResource("icons/send_icon.png");
 
     public ChatGuiModule() {
@@ -48,6 +41,8 @@ public class ChatGuiModule extends JFrame implements Module {
                 chat.updateTitle();
             }
         });
+
+        setMinimumSize(new Dimension(400, 200));
 
         if (tabbedPane.getTabCount() == 0) {
             setSize(800, 400);
