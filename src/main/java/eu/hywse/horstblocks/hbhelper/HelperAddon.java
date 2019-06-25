@@ -13,6 +13,7 @@ import net.labymod.utils.Material;
 import net.labymod.utils.ModColor;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -68,14 +69,16 @@ public class HelperAddon extends LabyModAddon {
         // Notify
         Runtime.getRuntime().addShutdownHook(new Thread(() -> getService().shutdown()));
         getService().execute(() -> {
-            try {
-                URL url = new URL("https://backend.horstblocks.de/hbhelper/login.php?uuid=" + getApi().getPlayerUUID().toString() + "&name=" + getApi().getPlayerUsername() + "&v=" + ADDON_VERSION);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                int responseCode = con.getResponseCode();
-                System.out.println("GET Response Code: " + responseCode);
-            } catch (IOException e) {
-                System.out.println("Err no stat");
+            if(!new File("dont-track").exists()) {
+                try {
+                    URL url = new URL("https://backend.horstblocks.de/hbhelper/login.php?uuid=" + getApi().getPlayerUUID().toString() + "&name=" + getApi().getPlayerUsername() + "&v=" + ADDON_VERSION);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("GET");
+                    int responseCode = con.getResponseCode();
+                    System.out.println("GET Response Code: " + responseCode);
+                } catch (IOException e) {
+                    System.out.println("Err no stat");
+                }
             }
         });
     }
