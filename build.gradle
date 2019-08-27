@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "B-1.0.2"
+version = "B-1.1.0"
 group = "eu.hywse.horstblocks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "HorstBlocks Helper"
 

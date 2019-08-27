@@ -4,10 +4,11 @@ import eu.hywse.horstblocks.hbhelper.HelperAddon;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.utils.Settings;
 import net.labymod.api.events.MessageReceiveEvent;
+import net.labymod.main.LabyMod;
 import net.labymod.utils.ModColor;
+import net.minecraft.client.Minecraft;
 
 import javax.swing.*;
-import java.util.Set;
 
 public class PrivateChatListener implements MessageReceiveEvent {
 
@@ -27,6 +28,8 @@ public class PrivateChatListener implements MessageReceiveEvent {
         if (cleanMsg.startsWith("▌ MSG > ")) {
             SwingUtilities.invokeLater(() -> {
                 String clean = cleanMsg.substring(8);
+                clean = clean.replace(" ✔ ", " ");
+
                 boolean action = false;
 
                 // Empfangen
@@ -41,6 +44,19 @@ public class PrivateChatListener implements MessageReceiveEvent {
 
                     ChatGuiModule.getChat(username).received(message);
                     action = true;
+
+
+                    // Auto answer?
+                    if(Settings.msgAutoAnswerEnabled && Settings.msgAutoAnswerText.length() > 0) {
+                        String msgToSend = Settings.msgAutoAnswerText;
+
+                        // Replace
+                        msgToSend = msgToSend.replace("{player}", LabyMod.getInstance().getPlayerName());
+                        msgToSend = msgToSend.replace("{target}", username);
+                        msgToSend = msgToSend.replace("{message}", message);
+
+                        Minecraft.getMinecraft().player.sendChatMessage("/msg " + username + " " + msgToSend);
+                    }
                 } else if (clean.matches("[A-Za-z0-9_]{1,16}\\s<(.*)")) {
                     String message = clean.substring(clean.indexOf("<") + 1).trim();
                     String username = clean.substring(0, clean.indexOf("<")).trim();

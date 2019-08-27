@@ -5,6 +5,7 @@ import eu.hywse.horstblocks.hbhelper.modules.ModuleGui;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.listener.PrivateChatListener;
 import eu.hywse.horstblocks.hbhelper.utils.Settings;
+import eu.hywse.horstblocks.hbhelper.utils.StretchIcon;
 import lombok.Getter;
 import net.labymod.api.LabyModAddon;
 import net.labymod.gui.elements.Tabs;
@@ -13,12 +14,6 @@ import net.labymod.utils.Material;
 import net.labymod.utils.ModColor;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -26,8 +21,8 @@ import java.util.concurrent.Executors;
 
 public class HelperAddon extends LabyModAddon {
 
-    public static final String ADDON_VERSION = "B-1.0.2";
-    public static final String ADDON_PREFIX = "  &c&lHelper &8» &7";
+    public static final String ADDON_VERSION = "B-1.1.0";
+    public static final String ADDON_PREFIX = " &8[&6Client&8] &c&lHelper &8» &7";
 
     @Getter
     private static HelperAddon instance;
@@ -68,19 +63,8 @@ public class HelperAddon extends LabyModAddon {
 
         // Notify
         Runtime.getRuntime().addShutdownHook(new Thread(() -> getService().shutdown()));
-        getService().execute(() -> {
-            if(!new File("dont-track").exists()) {
-                try {
-                    URL url = new URL("https://backend.horstblocks.de/hbhelper/login.php?uuid=" + getApi().getPlayerUUID().toString() + "&name=" + getApi().getPlayerUsername() + "&v=" + ADDON_VERSION);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
-                    int responseCode = con.getResponseCode();
-                    System.out.println("GET Response Code: " + responseCode);
-                } catch (IOException e) {
-                    System.out.println("Err no stat");
-                }
-            }
-        });
+
+        StretchIcon.init();
     }
 
     @Override
@@ -91,6 +75,10 @@ public class HelperAddon extends LabyModAddon {
         Settings.msgPlaySoundOnMessage = !getConfig().has("msgPlaySoundOnMessage") || getConfig().get("msgPlaySoundOnMessage").getAsBoolean();
         // Def: entity.experience_orb.pickup
         Settings.msgSoundFileName = getConfig().has("msgSoundFileName") ? getConfig().get("msgSoundFileName").getAsString() : "entity.experience_orb.pickup";
+
+        // msgAutoAnswerEnabled
+        Settings.msgAutoAnswerEnabled = getConfig().has("msgAutoAnswerEnabled") && getConfig().get("msgAutoAnswerEnabled").getAsBoolean();
+        Settings.msgAutoAnswerText = getConfig().has("msgAutoAnswerText") ? getConfig().get("msgAutoAnswerText").getAsString() : "Hey {target}, ich bin gerade AFK! (\"{message}\")";
     }
 
     @Override
@@ -132,6 +120,27 @@ public class HelperAddon extends LabyModAddon {
                     getConfig().addProperty("msgSoundFileName", b);
                     saveConfig();
                 }));
+
+        list.add(new StringElement(
+                "§8[§cCGUI§8] §7Auto-Reply Text",
+                new ControlElement.IconData(Material.PAPER),
+                Settings.msgAutoAnswerText,
+                b -> {
+                    Settings.msgAutoAnswerText = b;
+
+                    getConfig().addProperty("msgAutoAnswerText", b);
+                    saveConfig();
+                }));
+
+        list.add(new BooleanElement(
+                "§8[§cCGUI§8] §7Auto-Reply",
+                new ControlElement.IconData(Material.REDSTONE_TORCH_ON),
+                b -> {
+                    Settings.msgAutoAnswerEnabled = b;
+
+                    getConfig().addProperty("msgAutoAnswerEnabled", b);
+                    saveConfig();
+                }, Settings.msgAutoAnswerEnabled));
     }
 
 }

@@ -20,17 +20,18 @@ import java.util.Date;
 @Getter
 public class UserChatDesigner extends JPanel {
 
-    JTabbedPane tabbedPane;
-    JButton btnSend = new JButton("Absenden");
-    JScrollPane scrollChatBox;
-    JTextPane txtChatBox = new JTextPane();
-    JButton btnCloseSingle = new JButton("\uD83D\uDD12");
-    JButton btnClearChat = new JButton("Chat leeren");
-    JButton btnDelete = new JButton("L\u00F6schen");
-    JLabel lblChatHochladen = new JLabel("Chat hochladen auf:");
-    JButton btnUploadHastebin = new JButton("Hastebin");
-    JButton btnCloseAll = new JButton("\uD83D\uDD12\uD83D\uDD12");
-    JTextField txtInputField = new JTextField();
+    public JTabbedPane tabbedPane;
+    public JButton btnSend = new JButton("Absenden");
+    public JScrollPane scrollChatBox;
+    public JTextPane txtChatBox = new JTextPane();
+    public JButton btnCloseSingle = new JButton("\uD83D\uDD12");
+    public JButton btnClearChat = new JButton("Chat leeren");
+    public JButton btnDelete = new JButton("L\u00F6schen");
+    public JLabel lblChatHochladen = new JLabel("Chat hochladen auf:");
+    public JButton btnUploadHastebin = new JButton("Hastebin");
+    public JButton btnCloseAll = new JButton("\uD83D\uDD12\uD83D\uDD12");
+    public JTextField txtInputField = new JTextField();
+    public JLabel lblChars = new JLabel("");
 
     private String username;
 
@@ -81,7 +82,8 @@ public class UserChatDesigner extends JPanel {
                                         .addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                                         .addComponent(btnClearChat, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                                         .addComponent(btnUploadHastebin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblChatHochladen))
+                                        .addComponent(lblChatHochladen)
+                                        .addComponent(lblChars))
                                 .addContainerGap())
         );
         groupLayout.setVerticalGroup(
@@ -99,7 +101,9 @@ public class UserChatDesigner extends JPanel {
                                                 .addGap(18)
                                                 .addComponent(lblChatHochladen)
                                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                                .addComponent(btnUploadHastebin, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(btnUploadHastebin, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18)
+                                                .addComponent(lblChars, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(ComponentPlacement.RELATED)
                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
                                         .addComponent(btnDelete, Alignment.TRAILING)

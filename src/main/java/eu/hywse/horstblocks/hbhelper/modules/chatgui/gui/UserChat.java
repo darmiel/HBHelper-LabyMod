@@ -22,6 +22,8 @@ import java.util.Date;
 
 public class UserChat extends UserChatDesigner {
 
+    private static final String LBL_CHARS_TEXT = "(%current%/%max% Chars)";
+
     @Getter
     private int unreadMessages = 0;
 
@@ -130,6 +132,26 @@ public class UserChat extends UserChatDesigner {
 
             tabbedPane.setTabComponentAt(getTabIndex(), pnlTabPanel);
         });
+
+        updateTitle();
+    }
+
+    private int getMaxLength() {
+        return 256 - ("/msg " + getUsername() + " ").length();
+    }
+
+    private void updateChars() {
+        updateChars(false);
+    }
+
+    private void updateChars(boolean add) {
+        int current = txtInputField.getText().length() + (add ? 1 : 0);
+        int max = getMaxLength();
+
+        lblChars.setText(
+                LBL_CHARS_TEXT.replace("%current%", String.valueOf(current))
+                        .replace("%max%", String.valueOf(max))
+        );
     }
 
     private void registerListener() {
@@ -138,12 +160,14 @@ public class UserChat extends UserChatDesigner {
 
         // Send  Button
         btnSend.addActionListener(e -> send());
-        txtChatBox.addKeyListener(new KeyAdapter() {
+        txtInputField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyChar() == '\n') {
                     e.consume();
                     send();
+                } else {
+                    updateChars(true);
                 }
             }
         });
@@ -316,7 +340,7 @@ public class UserChat extends UserChatDesigner {
      * Anschließend wird die Eingabetextbox ausgewählt
      */
     private void send() {
-        String message = /*(msg == null ? */ txtChatBox.getText().trim() /* : msg) */;
+        String message = /*(msg == null ? */ txtInputField.getText().trim() /* : msg) */;
 
         // Min length
         if (message.length() == 0) {
@@ -335,8 +359,8 @@ public class UserChat extends UserChatDesigner {
 
         // Fokus auf Chatfeld
 //        if (msg == null) {
-        txtChatBox.grabFocus();
-        txtChatBox.setText("");
+        txtInputField.grabFocus();
+        txtInputField.setText("");
 //        }
 
         // Update unread
