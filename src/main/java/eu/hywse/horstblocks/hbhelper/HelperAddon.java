@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 
 public class HelperAddon extends LabyModAddon {
 
-    public static final String ADDON_VERSION = "B-1.1.0";
+    public static final String ADDON_VERSION = "B-1.2.0";
     public static final String ADDON_PREFIX = " &8[&6Client&8] &c&lHelper &8» &7";
 
     @Getter
