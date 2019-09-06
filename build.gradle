@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
         maven {
             url = "http://files.minecraftforge.net/maven"
         }
@@ -8,9 +9,12 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
+
 }
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 version = "B-1.1.0"
 group = "eu.hywse.horstblocks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -35,7 +39,6 @@ repositories {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
-   // annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
 
 processResources {
@@ -62,6 +65,7 @@ reobf {
         useNotchSrg()
     }
 }
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

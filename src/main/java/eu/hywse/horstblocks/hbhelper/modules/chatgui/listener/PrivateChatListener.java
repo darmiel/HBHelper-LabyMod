@@ -47,7 +47,27 @@ public class PrivateChatListener implements MessageReceiveEvent {
 
 
                     // Auto answer?
-                    if(Settings.msgAutoAnswerEnabled && Settings.msgAutoAnswerText.length() > 0) {
+                    if (Settings.msgAutoAnswerEnabled && Settings.msgAutoAnswerText.length() > 0) {
+
+                        // Check for focus
+                        if (Settings.msgAutoAnswerNotIfInFocus
+                                && HelperAddon.getInstance().getChatGuiModule().isVisible()
+                                && HelperAddon.getInstance().getChatGuiModule().hasFocus()
+                                && HelperAddon.getInstance().getChatGuiModule().getTabbedPane().getTabCount() > 0) {
+
+                            int index = HelperAddon.getInstance().getChatGuiModule().getTabbedPane().getSelectedIndex();
+                            if (index >= 0) {
+                                String title = HelperAddon.getInstance().getChatGuiModule().getTabbedPane().getTitleAt(index);
+                                if (title.contains(" ")) {
+                                    title = title.split(" ")[0];
+                                }
+                                title = title.trim();
+                                if (title.equals(username)) {
+                                    return;
+                                }
+                            }
+                        }
+
                         String msgToSend = Settings.msgAutoAnswerText;
 
                         // Replace
@@ -70,9 +90,9 @@ public class PrivateChatListener implements MessageReceiveEvent {
                     action = true;
                 }
 
-                if(action) {
-                    if(Settings.msgOpenGuiOnMessage
-                        && !HelperAddon.getInstance().getChatGuiModule().isVisible()) {
+                if (action) {
+                    if (Settings.msgOpenGuiOnMessage
+                            && !HelperAddon.getInstance().getChatGuiModule().isVisible()) {
                         HelperAddon.getInstance().getChatGuiModule().setVisible(true);
                     }
                 }

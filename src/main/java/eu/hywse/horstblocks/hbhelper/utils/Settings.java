@@ -7,5 +7,6 @@ public class Settings {
     public static String msgSoundFileName;
     public static String msgAutoAnswerText;
     public static boolean msgAutoAnswerEnabled;
+    public static boolean msgAutoAnswerNotIfInFocus;
 
 }

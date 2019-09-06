@@ -32,6 +32,8 @@ public class HelperAddon extends LabyModAddon {
 
     /* Settings */
 
+    /* ConfigCat */
+//    private ConfigCatClient configCatClient = new ConfigCatClient("6zLXCNhygA08KrV9IK9rPQ/V70bqynpRUuIYMm4G1fdKw");
 
     /*
      * Modules
@@ -79,6 +81,7 @@ public class HelperAddon extends LabyModAddon {
         // msgAutoAnswerEnabled
         Settings.msgAutoAnswerEnabled = getConfig().has("msgAutoAnswerEnabled") && getConfig().get("msgAutoAnswerEnabled").getAsBoolean();
         Settings.msgAutoAnswerText = getConfig().has("msgAutoAnswerText") ? getConfig().get("msgAutoAnswerText").getAsString() : "Hey {target}, ich bin gerade AFK! (\"{message}\")";
+        Settings.msgAutoAnswerNotIfInFocus = !getConfig().has("msgAutoAnswerNotIfInFocus") || getConfig().get("msgAutoAnswerNotIfInFocus").getAsBoolean(); // default TRUE
     }
 
     @Override
@@ -141,6 +144,18 @@ public class HelperAddon extends LabyModAddon {
                     getConfig().addProperty("msgAutoAnswerEnabled", b);
                     saveConfig();
                 }, Settings.msgAutoAnswerEnabled));
+
+//        if(configCatClient.getValue(Boolean.class, "answerNotIfInFocus", false)) {
+            list.add(new BooleanElement(
+                    "§8[§cCGUI§8] §7Do §c§lNOT §7Auto-Reply if §bFOCUSED",
+                    new ControlElement.IconData(Material.BARRIER),
+                    b -> {
+                        Settings.msgAutoAnswerNotIfInFocus = b;
+
+                        getConfig().addProperty("msgAutoAnswerNotIfInFocus", b);
+                        saveConfig();
+                    }, Settings.msgAutoAnswerNotIfInFocus));
+//        }
     }
 
 }
