@@ -3,95 +3,91 @@ package eu.hywse.horstblocks.hbhelper.modules.chatgui;
 import eu.hywse.horstblocks.hbhelper.HelperAddon;
 import eu.hywse.horstblocks.hbhelper.modules.Module;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.gui.UserChat;
-import eu.hywse.horstblocks.hbhelper.utils.ResourceUtil;
-import lombok.Getter;
-import net.labymod.main.LabyMod;
-import net.minecraft.client.resources.IResource;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import lombok.Getter;
+import net.labymod.main.LabyMod;
+import net.minecraft.resources.IResource;
 
 public class ChatGuiModule extends JFrame implements Module {
 
-    public static final IResource TEXTURE_HEAD_128 = ResourceUtil.getResource("icons/horst_head.png");
-    public static final IResource TEXTURE_SEND = ResourceUtil.getResource("icons/send_icon.png");
-    @Getter
-    private static Map<String, UserChat> chats = new HashMap<>();
-    @Getter
-    private JTabbedPane tabbedPane;
+  @Getter
+  private static final Map<String, UserChat> chats = new HashMap<>();
 
-    public ChatGuiModule() {
-        add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
+  @Getter
+  private JTabbedPane tabbedPane;
 
-        System.out.println(TEXTURE_HEAD_128);
-        System.out.println(TEXTURE_HEAD_128.getInputStream());
+  public ChatGuiModule() {
+    add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
 
-        // Listeners
-        tabbedPane.addChangeListener(e -> {
-            if (tabbedPane.getSelectedComponent() instanceof UserChat) {
-                UserChat chat = (UserChat) tabbedPane.getSelectedComponent();
-                chat.updateTitle();
-            }
-        });
+    // Listeners
+    tabbedPane.addChangeListener(e -> {
+      if (tabbedPane.getSelectedComponent() instanceof UserChat) {
+        UserChat chat = (UserChat) tabbedPane.getSelectedComponent();
+        chat.updateTitle();
+      }
 
-        setMinimumSize(new Dimension(400, 200));
+      updateTitle();
+    });
 
-        if (tabbedPane.getTabCount() == 0) {
-            setSize(800, 400);
-        }
+    setMinimumSize(new Dimension(400, 200));
 
-        addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                updateTitle();
-            }
+    if (tabbedPane.getTabCount() == 0) {
+      setSize(800, 400);
+    }
 
-            @Override
-            public void focusLost(FocusEvent e) {
-                updateTitle();
-            }
-        });
+    addFocusListener(new FocusAdapter() {
+      @Override
+      public void focusGained(FocusEvent e) {
         updateTitle();
-        try {
-            setIconImage(ImageIO.read(TEXTURE_HEAD_128.getInputStream()));
-        } catch (IOException e) {
-            System.out.println("Konnte Icon nicht laden: " + e.getMessage());
-        }
+      }
+
+      @Override
+      public void focusLost(FocusEvent e) {
+        updateTitle();
+      }
+    });
+    updateTitle();
+  }
+
+  public static UserChat getChat(String username) {
+    if (!chats.containsKey(username)) {
+      UserChat chat = new UserChat(username,
+          HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
+      chat.open();
+
+      chats.put(username, chat);
     }
 
-    public static UserChat getChat(String username) {
-        if (!chats.containsKey(username)) {
-            UserChat chat = new UserChat(username, HelperAddon.getInstance().getChatGuiModule().getTabbedPane());
-            chat.open();
+    return chats.getOrDefault(username, null);
+  }
 
-            chats.put(username, chat);
-        }
+  public static boolean hasChat(String username) {
+    return chats.containsKey(username);
+  }
 
-        return chats.getOrDefault(username, null);
-    }
+  @Override
+  public void onClick() {
+    setVisible(!isVisible());
+  }
 
-    public static boolean hasChat(String username) {
-        return chats.containsKey(username);
-    }
+  @Override
+  public String moduleName() {
+    return "ChatGUI";
+  }
 
-    @Override
-    public void onClick() {
-        setVisible(!isVisible());
-    }
-
-    @Override
-    public String moduleName() {
-        return "ChatGUI";
-    }
-
-    private void updateTitle() {
-        setTitle("HB-Helper BETA (Module: MSG) | [Eingeloggt als " + LabyMod.getInstance().getPlayerName() + "]");
-    }
+  private void updateTitle() {
+    setTitle(
+        "HB-Helper BETA (Module: MSG) | [Eingeloggt als " + LabyMod.getInstance().getPlayerName()
+            + "]");
+  }
 
 }

@@ -2,9 +2,9 @@ package eu.hywse.horstblocks.hbhelper.modules;
 
 public interface Module {
 
-    String moduleName();
+  String moduleName();
 
-    default void onClick() {
-    }
+  default void onClick() {
+  }
 
 }

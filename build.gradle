@@ -24,9 +24,9 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.0.0'
-group = 'com.example' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'Example Addon'
+version = '1.3.0'
+group = 'eu.hywse.horstblocks.hbhelper' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'HBHelper'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -79,6 +79,14 @@ repositories {
 
 
 dependencies {
+    // Lombok
+    compileOnly('org.projectlombok:lombok:1.18.20')
+    annotationProcessor('org.projectlombok:lombok:1.18.20')
+
+    testCompileOnly('org.projectlombok:lombok:1.18.20')
+    testAnnotationProcessor('org.projectlombok:lombok:1.18.20')
+
+    // MC + Laby
     implementation 'org.projectlombok:lombok:1.18.16'
     annotationProcessor("org.spongepowered:mixin:0.8.2:processor")
 
