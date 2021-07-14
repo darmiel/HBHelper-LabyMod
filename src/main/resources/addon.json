@@ -1,10 +1,9 @@
 {
   "uuid": "%uuid%",
-  "name": "\u00a7c\u00a7lHorstBlocks Helper",
+  "name": "HBHelper",
   "mainClass": "eu.hywse.horstblocks.hbhelper.HelperAddon",
-  "description": "Einige nuetzliche Methoden!",
-  "version": 120,
   "author": "d2aniel",
+  "description": "HB Chat Manager",
   "category": 1,
-  "icon": "https://cdn.discordapp.com/attachments/335395867643346964/570697150573314048/128.png"
+  "version": 1.3
 }

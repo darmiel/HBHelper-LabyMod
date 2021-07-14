@@ -1,7 +1,7 @@
 package eu.hywse.horstblocks.hbhelper;
 
 import eu.hywse.horstblocks.hbhelper.modules.Module;
-import eu.hywse.horstblocks.hbhelper.modules.ModuleGui;
+import eu.hywse.horstblocks.hbhelper.modules.ModuleTab;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.ChatGuiModule;
 import eu.hywse.horstblocks.hbhelper.modules.chatgui.listener.PrivateChatListener;
 import eu.hywse.horstblocks.hbhelper.utils.Settings;
@@ -10,8 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import lombok.Getter;
 import net.labymod.api.LabyModAddon;
 import net.labymod.gui.elements.Tabs;
@@ -27,10 +25,8 @@ public class HelperAddon extends LabyModAddon {
 
   // ugh...
   static {
-    System.setProperty("java.awt.headless", "false");
-    System.out.println("[HBHelper] Headless:");
-    System.out.println(java.awt.GraphicsEnvironment.isHeadless());
-    System.out.println("[HBHelper] /");
+    System.out.println("--> java.awt.headless Headless:" + java.awt.GraphicsEnvironment.isHeadless());
+    System.out.println("--> /");
   }
 
 
@@ -49,11 +45,12 @@ public class HelperAddon extends LabyModAddon {
   private final LinkedList<Module> modules = new LinkedList<>();
 
   @Getter
-  private ChatGuiModule chatGuiModule = new ChatGuiModule();
+  private ChatGuiModule chatGuiModule;
 
   ////////////////////////7
 
   public HelperAddon() {
+    System.out.println("--> Instantiated");
     HelperAddon.instance = this;
   }
 
@@ -61,27 +58,18 @@ public class HelperAddon extends LabyModAddon {
 
   @Override
   public void onEnable() {
-    for (int i = 0; i < 100; i++) {
-      System.out.println();
+    System.out.println("--> onEnable");
+    for (int i = 0; i < 10; i++) {
+      System.out.println("-->");
     }
-    System.out.println("aaaaaaaa");
 
     getApi().getEventService().registerListener(new PrivateChatListener());
-
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-      System.out.println("ERR: " + e.getMessage());
-    }
-    modules.add(this.chatGuiModule = new ChatGuiModule());
+     modules.add(this.chatGuiModule = new ChatGuiModule());
 
     // Tabs
-    Tabs.registerTab("HB Helper", ModuleGui.class);
-
-    // Notify
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> getService().shutdown()));
-
+    Tabs.registerTab("HB Helper", ModuleTab.class);
     StretchIcon.init();
+    System.out.println("registered (?)");
   }
 
   @Override

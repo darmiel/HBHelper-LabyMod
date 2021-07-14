@@ -6,27 +6,25 @@ import eu.hywse.horstblocks.hbhelper.modules.chatgui.gui.UserChat;
 import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import lombok.Getter;
 import net.labymod.main.LabyMod;
-import net.minecraft.resources.IResource;
 
-public class ChatGuiModule extends JFrame implements Module {
+public class ChatGuiModule /* extends JFrame */ implements Module {
 
   @Getter
   private static final Map<String, UserChat> chats = new HashMap<>();
 
   @Getter
-  private JTabbedPane tabbedPane;
+  private final JTabbedPane tabbedPane = new JTabbedPane();
 
   public ChatGuiModule() {
-    add(tabbedPane = new JTabbedPane(SwingConstants.TOP));
+    /*
+    // add(this.tabbedPane = new JTabbedPane(SwingConstants.TOP));
 
     // Listeners
     tabbedPane.addChangeListener(e -> {
@@ -56,6 +54,7 @@ public class ChatGuiModule extends JFrame implements Module {
       }
     });
     updateTitle();
+     */
   }
 
   public static UserChat getChat(String username) {
@@ -76,7 +75,8 @@ public class ChatGuiModule extends JFrame implements Module {
 
   @Override
   public void onClick() {
-    setVisible(!isVisible());
+    System.out.println("Module " + moduleName() + " clicked!");
+    //setVisible(!isVisible());
   }
 
   @Override
@@ -85,9 +85,9 @@ public class ChatGuiModule extends JFrame implements Module {
   }
 
   private void updateTitle() {
-    setTitle(
-        "HB-Helper BETA (Module: MSG) | [Eingeloggt als " + LabyMod.getInstance().getPlayerName()
-            + "]");
+   // setTitle(
+    //    "HB-Helper BETA (Module: MSG) | [Eingeloggt als " + LabyMod.getInstance().getPlayerName()
+     //       + "]");
   }
 
 }

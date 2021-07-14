@@ -248,7 +248,7 @@ public class UserChat extends UserChatDesigner {
     addTab(tabbedPane);
 
     if (HelperAddon.getInstance().getChatGuiModule().getTabbedPane().getTabCount() == 1) {
-      HelperAddon.getInstance().getChatGuiModule().pack();
+//      HelperAddon.getInstance().getChatGuiModule().pack();
     }
 
     appendComment(

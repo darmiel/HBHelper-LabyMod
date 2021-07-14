@@ -13,6 +13,8 @@ public class PrivateChatListener {
 
   @Subscribe
   public void onReceive(final MessageReceiveEvent event) {
+    System.out.println("onReceive: " + event.toString());
+
     final String cleanMsg = event.getComponent().getUnformattedComponentText();
     if (cleanMsg.startsWith("Spieler '") && cleanMsg.endsWith("' ist nicht online!")) {
       String username = cleanMsg.substring(9, cleanMsg.length() - 19);
@@ -48,8 +50,8 @@ public class PrivateChatListener {
 
             // Check for focus
             if (Settings.msgAutoAnswerNotIfInFocus
-                && HelperAddon.getInstance().getChatGuiModule().isVisible()
-                && HelperAddon.getInstance().getChatGuiModule().hasFocus()
+                //&& HelperAddon.getInstance().getChatGuiModule().isVisible()
+                //&& HelperAddon.getInstance().getChatGuiModule().hasFocus()
                 && HelperAddon.getInstance().getChatGuiModule().getTabbedPane().getTabCount() > 0) {
 
               int index = HelperAddon.getInstance().getChatGuiModule().getTabbedPane()
@@ -92,9 +94,9 @@ public class PrivateChatListener {
         }
 
         if (action) {
-          if (Settings.msgOpenGuiOnMessage
-              && !HelperAddon.getInstance().getChatGuiModule().isVisible()) {
-            HelperAddon.getInstance().getChatGuiModule().setVisible(true);
+          if (Settings.msgOpenGuiOnMessage) {
+              //&& !HelperAddon.getInstance().getChatGuiModule().isVisible()) {
+            // HelperAddon.getInstance().getChatGuiModule().setVisible(true);
           }
         }
       });
